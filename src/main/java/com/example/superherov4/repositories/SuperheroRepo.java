@@ -108,14 +108,15 @@ public class SuperheroRepo implements ISuperheroRepo {
     public PowerCount getPowerCount(String name) {
         PowerCount countObj = null;
         try {
-            SQL = "SELECT heroname, COUNT(*) AS powers FROM superhero JOIN superheropower ON superhero.id = superheropower.superheroid AND heroname = ?; ";
+            SQL = "SELECT heroname, realname, COUNT(*) AS powers FROM superhero JOIN superheropower ON superhero.id = superheropower.superheroid AND heroname = ? GROUP BY realname";
             ps = connect().prepareStatement(SQL);
             ps.setString(1, name);
             rs = ps.executeQuery();
             if(rs.next()) {
                 String heroName = rs.getString("heroname");
+                String realName = rs.getString("realname");
                 int count = rs.getInt("powers");
-                countObj = new PowerCount(heroName, count);
+                countObj = new PowerCount(heroName, realName, count);
             }
             return countObj;
         } catch (SQLException e) {

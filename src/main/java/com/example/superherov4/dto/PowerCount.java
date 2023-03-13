@@ -4,10 +4,12 @@ import java.util.List;
 
 public class PowerCount {
     private String heroName;
+    private String realName;
     private int countPower;
 
-    public PowerCount(String heroName, int countPower) {
+    public PowerCount(String heroName, String realName, int countPower) {
         this.heroName = heroName;
+        this.realName = realName;
         this.countPower = countPower;
     }
 
@@ -19,6 +21,9 @@ public class PowerCount {
         return heroName;
     }
 
+    public String getRealName() {
+        return realName;
+    }
 
     public int getCountPower() {
         return countPower;
