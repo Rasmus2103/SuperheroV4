@@ -126,24 +126,28 @@ public class SuperheroRepo implements ISuperheroRepo {
     @Override
     public List<City> getCity() {
         List<City> cities = new ArrayList<>();
+        City currentCity = null;
+        String currentCityName = "";
         try {
-            SQL = "SELECT city.cityname, superhero.heroname FROM superhero JOIN city ON superhero.cityid = city.id";
+            SQL = "SELECT city.cityname, superhero.heroname FROM superhero JOIN city ON superhero.cityid = city.id ORDER BY city.cityname";
             ps = connect().prepareStatement(SQL);
             rs = ps.executeQuery();
-            while(rs.next()) {
-                City city = new City();
 
+            while(rs.next()) {
                 String cityName = rs.getString("cityname");
                 String heroName = rs.getString("heroname");
-
-                List<String> cityAndHeros = new ArrayList<>();
-                city.setHeroName(cityAndHeros);
-                city.setCityName(cityName);
-                city.addHero(heroName);
-
-                cities.add(city);
+                if (currentCityName.equals(cityName)) {
+                    currentCity.addHero(heroName);
+                } else {
+                    currentCity = new City(cityName, new ArrayList<>());
+                    currentCityName = cityName;
+                    currentCity.addHero(heroName);
+                }
+                if(!cities.contains(currentCity))
+                cities.add(currentCity);
             }
             return cities;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
