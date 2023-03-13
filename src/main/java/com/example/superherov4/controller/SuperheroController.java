@@ -1,12 +1,12 @@
 package com.example.superherov4.controller;
 
+import com.example.superherov4.dto.City;
+import com.example.superherov4.dto.PowerCount;
+import com.example.superherov4.dto.SuperPowerCount;
 import com.example.superherov4.model.Superhero;
 import com.example.superherov4.repositories.ISuperheroRepo;
-import com.example.superherov4.repositories.SuperheroRepo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,17 +32,32 @@ public class SuperheroController {
     }
 
     @GetMapping(path="superheroes/{name}")
-    public ResponseEntity<String> getSuperheroes(@PathVariable String name) {
+    public ResponseEntity<Superhero> getSuperheroes(@PathVariable String name) {
         Superhero superhero = superheroRepo.getSuperhero(name);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type","text/html");
+        return new ResponseEntity<>(superhero, HttpStatus.OK);
+    }
 
-        return new ResponseEntity<String>(
-                "<html><body><h1>" +
-                        superhero.getHeroName() + " " +
-                        superhero.getRealName() + " " +
-                        superhero.getCreationYear() + " " +
-                        "</h1></body></html>"
-                ,responseHeaders, HttpStatus.OK);
+    @GetMapping(path="superheroes/superpower")
+    public ResponseEntity<List<SuperPowerCount>> getHeroAndPower() {
+        List superheroList = superheroRepo.getHeroAndPowers();
+        return new ResponseEntity<>(superheroList, HttpStatus.OK);
+    }
+
+    @GetMapping(path="superheroes/count")
+    public ResponseEntity<List<PowerCount>> getAllPowerCount() {
+        List superheroList = superheroRepo.getAllPowerCount();
+        return new ResponseEntity<>(superheroList, HttpStatus.OK);
+    }
+
+    @GetMapping(path="superheroes/count/{name}")
+    public ResponseEntity<PowerCount> getPowerCount(@PathVariable String name) {
+        PowerCount count = superheroRepo.getPowerCount(name);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping(path="superheroes/city")
+    public ResponseEntity<List<City>> getCity() {
+        List cityList = superheroRepo.getCity();
+        return new ResponseEntity<>(cityList, HttpStatus.OK);
     }
 }
